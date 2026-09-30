@@ -106,12 +106,60 @@
     text-transform: uppercase;
   }
   @media (max-width: 900px){ .logo-tag{ display:none; } }
-  nav.links{ display:flex; gap: 26px; }
+  nav.links{ display:flex; gap: 26px; align-items:center; }
   nav.links a{
     font-family: var(--mono); font-size: 12.5px; letter-spacing: 0.06em;
     color: var(--muted); text-transform: uppercase; transition: color 0.2s ease;
   }
   nav.links a:hover{ color: var(--ink); }
+
+  .nav-dropdown{ position: relative; }
+  .nav-dropdown > a{
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .nav-dropdown > a::after{
+    content: '▼';
+    font-size: 9px;
+    margin-left: 2px;
+    transition: transform 0.2s ease;
+  }
+  .nav-dropdown:hover > a::after{ transform: translateY(2px); }
+  .dropdown-menu{
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 0;
+    min-width: 190px;
+    background: rgba(16,18,22,0.98);
+    border: 1px solid var(--line-soft);
+    backdrop-filter: blur(10px);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+    z-index: 5;
+  }
+  .nav-dropdown:hover .dropdown-menu,
+  .nav-dropdown:focus-within .dropdown-menu{
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  .dropdown-menu a{
+    display: block;
+    padding: 12px 14px;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-bottom: 1px solid var(--line-soft);
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+  .dropdown-menu a:last-child{ border-bottom: none; }
+  .dropdown-menu a:hover{ background: var(--bg); color: var(--blue); }
+
   @media (max-width: 980px){ nav.links{ display:none; } }
   .header-right{ display:flex; align-items:center; gap:20px; }
   .signin{ font-family: var(--mono); font-size:12.5px; color: var(--muted); text-transform:uppercase; letter-spacing:0.06em; }
@@ -220,7 +268,7 @@
   .card .card-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
   .card h3{ font-family: var(--display); font-style:italic; font-weight:700; font-size: 19px; margin-top: 14px; }
   .card p{ margin-top: 10px; color: var(--muted); font-size: 14.5px; }
-  .card .plus{ width: 20px; height:20px; flex-shrink:0; display:flex; align-items:center; justify-content:center; border: 1px solid var(--line); transition: transform 0.35s ease; color: var(--blue); }
+  .card .plus{ width: 20px; height:20px; flex-shrink:0; display:flex; align-items:center; justify-content:center; border: 1px solid var(--line); transition: transform 0.35s ease; color: var(--blue) }
   .card .plus svg{ width:10px; height:10px; }
   .card.open .plus{ transform: rotate(135deg); }
   .card .more{ max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
@@ -253,7 +301,7 @@
   .step .n{ font-family: var(--mono); font-size: 30px; font-weight: 600; color: var(--line); }
   .step h3{ font-family: var(--display); font-style:italic; font-weight:700; font-size: 18px; margin-top: 12px; }
   .step p.desc{ margin-top: 8px; color: var(--muted); font-size: 14.5px; }
-  .step .plus{ width:20px; height:20px; flex-shrink:0; border:1px solid var(--line); display:flex; align-items:center; justify-content:center; transition: transform 0.35s ease; color: var(--blue); }
+  .step .plus{ width:20px; height:20px; flex-shrink:0; border:1px solid var(--line); display:flex; align-items:center; justify-content:center; transition: transform 0.35s ease; color: var(--blue) }
   .step .plus svg{ width:10px; height:10px; }
   .step.open .plus{ transform: rotate(135deg); }
   .step .more{ max-height:0; overflow:hidden; transition: max-height 0.4s ease; }
@@ -299,7 +347,7 @@
   .contact h2{ font-family: var(--display); font-style:italic; font-weight:700; font-size: clamp(28px,3.6vw,44px); max-width: 520px; line-height:1.1; text-transform: uppercase; }
   .contact-links{ display:flex; gap:14px; flex-wrap:wrap; }
 
-  footer{ padding: 26px 0 40px 0; display:flex; justify-content: space-between; align-items:center; font-family: var(--mono); font-size:11.5px; color: var(--muted-2); flex-wrap:wrap; gap:10px; position:relative; z-index:2; letter-spacing:0.03em; }
+  footer{ padding: 26px 0 40px 0; display:flex; justify-content: space-between; align-items:center; font-family: var(--mono); font-size:11.5px; color: var(--muted-2); flex-wrap:wrap; gap:10px; position:relative; z-index:2; }
 
   :focus-visible{ outline: 1px solid var(--blue); outline-offset: 2px; }
 </style>
@@ -321,6 +369,12 @@
       <span class="logo-tag">AI Video Intelligence</span>
     </div>
     <nav class="links">
+      <div class="nav-dropdown">
+        <a href="#">AI Models</a>
+        <div class="dropdown-menu">
+          <a href="/v1">Aureven v1</a>
+        </div>
+      </div>
       <a href="#platform">Platform</a>
       <a href="#solutions">Solutions</a>
       <a href="#how">How it works</a>
@@ -426,7 +480,7 @@
     <div>
       <div class="eyebrow">// What we do</div>
       <h2>Aureven makes video summary easier to understand.</h2>
-      <p class="lede">We build AI that helps people process video faster and more intelligently. Instead of manually scrubbing through long footage, Aureven identifies important moments, understands visual context, and produces summaries people can use right away.</p>
+      <p class="lede">We build AI that helps people process video faster and more intelligently. Instead of manually scrubbing through long footage, Aureven identifies important moments, understands context, and packages it into clear answers and summaries.</p>
     </div>
     <div class="aside">
       <div class="lbl">Why it matters</div>
