@@ -13,5 +13,5 @@ I'll acknowledge within 7 days and keep you updated on the fix.
 
 ## Scope
 In scope: code execution or unsafe model loading, exposed secrets,
-vulnerable dependencies, privacy leaks in data or outputs.
+vulnerable dependencies, privacy leaks in data or outputs, etc.
 Out of scope: general model inaccuracies or bias (open a normal issue).
